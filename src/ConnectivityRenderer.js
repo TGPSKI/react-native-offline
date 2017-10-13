@@ -9,15 +9,15 @@ import reactConnectionStore from './reactConnectionStore';
 type DefaultProps = {
   timeout?: number,
   pingServerUrl?: string,
-  withExtraHeadRequest?: boolean,
+  withExtraHeadRequest?: boolean
 };
 
 type Props = DefaultProps & {
-  children: (isConnected: boolean) => React$Element<any>,
+  children: (isConnected: boolean) => React$Element<any>
 };
 
 type State = {
-  isConnected: boolean,
+  isConnected: boolean
 };
 
 class ConnectivityRenderer extends Component<DefaultProps, Props, State> {
@@ -25,17 +25,17 @@ class ConnectivityRenderer extends Component<DefaultProps, Props, State> {
     children: PropTypes.func.isRequired,
     timeout: PropTypes.number,
     pingServerUrl: PropTypes.string,
-    withExtraHeadRequest: PropTypes.bool,
+    withExtraHeadRequest: PropTypes.bool
   };
 
   static defaultProps: DefaultProps = {
     timeout: 3000,
     pingServerUrl: 'https://google.com',
-    withExtraHeadRequest: true,
+    withExtraHeadRequest: true
   };
 
   state = {
-    isConnected: reactConnectionStore.getConnection(),
+    isConnected: reactConnectionStore.getConnection()
   };
 
   componentWillMount() {
@@ -52,10 +52,8 @@ class ConnectivityRenderer extends Component<DefaultProps, Props, State> {
 
   componentDidMount() {
     NetInfo.isConnected.addEventListener(
-      'change',
-      this.props.withExtraHeadRequest
-        ? this.checkInternet
-        : this.handleConnectivityChange,
+      'connectionChange',
+      this.props.withExtraHeadRequest ? this.checkInternet : this.handleConnectivityChange
     );
     // On Android the listener does not fire on startup
     if (Platform.OS === 'android') {
@@ -71,10 +69,8 @@ class ConnectivityRenderer extends Component<DefaultProps, Props, State> {
 
   componentWillUnmount() {
     NetInfo.isConnected.removeEventListener(
-      'change',
-      this.props.withExtraHeadRequest
-        ? this.checkInternet
-        : this.handleConnectivityChange,
+      'connectionChange',
+      this.props.withExtraHeadRequest ? this.checkInternet : this.handleConnectivityChange
     );
   }
 
@@ -82,7 +78,7 @@ class ConnectivityRenderer extends Component<DefaultProps, Props, State> {
     checkInternetAccess(
       isConnected,
       this.props.timeout,
-      this.props.pingServerUrl,
+      this.props.pingServerUrl
     ).then((hasInternetAccess: boolean) => {
       this.handleConnectivityChange(hasInternetAccess);
     });
@@ -92,7 +88,7 @@ class ConnectivityRenderer extends Component<DefaultProps, Props, State> {
     reactConnectionStore.setConnection(isConnected);
     if (isConnected !== this.state.isConnected) {
       this.setState({
-        isConnected,
+        isConnected
       });
     }
   };
